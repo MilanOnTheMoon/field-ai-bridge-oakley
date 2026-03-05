@@ -1,0 +1,25 @@
+
+<!-- Launch file for the FieldAI NATS to ROS1 Bridge -->
+
+<launch>
+
+    <!-- Local constants: -->
+    <arg name="namespace"       default="/fieldai" />
+    <arg name="respawn"         default="true" />
+    <arg name="respawn_delay"   default="5" />
+
+    <!-- Start Node -->
+    <group ns="$(arg namespace)">
+
+        <node
+            name="nats_bridge"
+            pkg="nats_bridge"
+            type="nats_bridge_node.py"
+            respawn="$(arg respawn)"
+            respawn_delay="$(arg respawn_delay)"
+            output="screen"
+        />
+
+    </group>
+
+</launch>
