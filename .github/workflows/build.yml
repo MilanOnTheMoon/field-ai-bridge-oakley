@@ -2,9 +2,13 @@ name: FieldAI Bridge
 
 on:
   pull_request:
+    paths:
+      - 'nats_bridge/**'
   push:
     branches:
       - main
+    paths:
+      - 'nats_bridge/**'
   schedule:
     - cron: "0 3 * * 1"
 
