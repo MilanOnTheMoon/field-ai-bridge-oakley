@@ -1,5 +1,5 @@
 
-# docker compose up --build
+# HOSTNAME=$(hostname) docker compose up --build -d
 
 services:
 
@@ -69,6 +69,27 @@ services:
   #     MDSN_IP_ADDRESS: 192.168.128.132
   #   volumes:
   #     - ./gazebo-sandbox/compose-files/mount/sitl_certs:/certs
+
+  # ----- Tailscale (VPN Provider) -----
+
+  tailscale:
+    image: tailscale/tailscale:latest
+    hostname: ${HOSTNAME}-fieldai-bridge
+    environment:
+      # - TS_AUTHKEY=tskey-auth-NotARealKey
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      # - TS_EXTRA_ARGS=--advertise-routes=172.17.0.0/16
+    volumes:
+      - ${PWD}/tailscale-nginx/state:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+    restart: unless-stopped
+    network_mode: host
+
+# ----- Volumes -----
 
 # volumes:
 #   backbone-nats-storage:
