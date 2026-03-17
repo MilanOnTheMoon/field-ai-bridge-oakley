@@ -10,7 +10,14 @@
 git clone --recursive git@github.com:tii-firefighting/fieldai-bridge.git
 ```
 
+## Network Setup
+
 ![network_diagram](images/export/network-Page-1.svg)
+
+Communications between the FMO (ground station software) and the agents is via a [NATS messaging system](https://en.wikipedia.org/wiki/NATS_Messaging), which is then bridged on the agent side into the correct language (ROS1/ROS2/mavlink, etc).
+This is typically packaged as a docker file that can be easily deployed to each agent.
+
+The supplied docker compose file also starts the containers for the NATS backbone and authentication. 
 
 ## Configuration
 ### IP Forwarding
