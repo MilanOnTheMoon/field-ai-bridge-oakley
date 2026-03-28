@@ -1,4 +1,4 @@
-name: draw.io exports
+name: draw.io
 
 # Exports any draw.io images to svg so they
 # can be used in README.md files.  Only runs
