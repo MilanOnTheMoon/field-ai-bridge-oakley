@@ -1,3 +1,4 @@
+[![Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build.yml)[![DrawIO](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml)
 
 # fieldai-bridge
 
