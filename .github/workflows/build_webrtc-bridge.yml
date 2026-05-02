@@ -1,0 +1,33 @@
+name: WebRTC Bridge
+
+on:
+  pull_request:
+    paths:
+      - 'webRTC_bridge/**'
+      - .github/workflows/build_webrtc-bridge.yml
+  push:
+    branches:
+      - main
+    paths:
+      - 'webRTC_bridge/**'
+      - .github/workflows/build_webrtc-bridge.yml
+  schedule:
+    - cron: "0 2 1 * *"
+
+jobs:
+  fieldai-nats-bridge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: webRTC_bridge/
+          push: false
+          tags: fieldai-webrtc-bridge:latest

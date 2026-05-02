@@ -1,0 +1,18 @@
+
+# HOSTNAME=$(hostname) docker compose up --build -d
+
+services:
+
+  # ----- NATS Bridge -----
+
+  nats-bridge:
+    build: .
+    restart: always
+    network_mode: host
+    privileged: true
+    environment:
+      - DEVICE_ID=fieldAI
+      - NATS_SERVER_URL=nats://192.168.128.132:4223
+      - TELEMETRY_RATE=3.0
+      # - ROS_MASTER_URI=http://hal:11311
+    command: ["bash", "-c", "source devel/setup.bash && roslaunch nats_bridge nats_bridge.launch"]
