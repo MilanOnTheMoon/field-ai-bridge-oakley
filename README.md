@@ -1,11 +1,13 @@
-[![Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build.yml)[![DrawIO](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml)
+[![NATS Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml)\
+[![WebRTC Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml)\
+[![DrawIO](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml)
 
 # fieldai-bridge
 
 - Docker image with ros1 node that bridges NATS to ROS1 (FieldAI topics)
 - Docker compose file that brings up all the different required codes
   - NATS to ROS1 bridge
-  - NATS listener
+  - ROS1 to webRTC bridge
 
 ```bash
 git clone --recursive git@github.com:tii-firefighting/fieldai-bridge.git
@@ -21,15 +23,10 @@ This is typically packaged as a docker file that can be easily deployed to each 
 The supplied docker compose file also starts the containers for the NATS backbone and authentication. 
 
 ## Configuration
-### IP Forwarding
-Make sure IP forwarding is enabled
-```
-echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.conf
-```
 
-### Tailscale Log In
-```
-docker exec -it tailscale-tailscale-1 tailscale up
+```bash
+docker compose -f   NATS_bridge/compose.yaml up --build 
+docker compose -f webRTC_bridge/compose.yaml up --build 
 ```
 
 ## Debugging
@@ -39,15 +36,5 @@ See https://github.com/daniel-robotics/ros_python_pkg for example ros package se
 ```bash
 # Run a ros noetic instance
 docker run -it --network=host osrf/ros:noetic-desktop
-
-# Build container
-docker build -t fieldai-nats-bridge:latest . 
-
-# Run container
-docker run -it --network=host fieldai-nats-bridge:latest
-source devel/setup.bash && roslaunch nats_bridge nats_bridge.launch
-
-# Start via docker compose (for deployment)
-HOSTNAME=$(hostname) docker compose up --build -d
 
 ```

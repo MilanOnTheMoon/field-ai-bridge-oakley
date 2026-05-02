@@ -1,16 +1,18 @@
-name: FieldAI Bridge
+name: NATS Bridge
 
 on:
   pull_request:
     paths:
-      - 'nats_bridge/**'
+      - 'NATS_bridge/**'
+      - .github/workflows/build_nats-bridge.yml
   push:
     branches:
       - main
     paths:
-      - 'nats_bridge/**'
+      - 'NATS_bridge/**'
+      - .github/workflows/build_nats-bridge.yml
   schedule:
-    - cron: "0 3 * * 1"
+    - cron: "0 2 1 * *"
 
 jobs:
   fieldai-nats-bridge:
@@ -26,6 +28,6 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: NATS_bridge/
           push: false
           tags: fieldai-nats-bridge:latest
