@@ -1,6 +1,4 @@
-[![NATS Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml)\
-[![WebRTC Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml)\
-[![DrawIO](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml)
+[![NATS Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_nats-bridge.yml)[![WebRTC Bridge](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/build_webrtc-bridge.yml)[![DrawIO](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml/badge.svg)](https://github.com/tii-firefighting/fieldai-bridge/actions/workflows/drawio-export.yml)
 
 # fieldai-bridge
 
