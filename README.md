@@ -24,15 +24,24 @@ The supplied docker compose file also starts the containers for the NATS backbon
 
 ```bash
 docker compose -f   NATS_bridge/compose.yaml up --build 
-docker compose -f webRTC_bridge/compose.yaml up --build 
+# docker compose -f webRTC_bridge/compose.yaml up --build  # IGNORE THIS FOR NOW 
 ```
 
 ## Debugging
+See individual folders for debugging in the `README.md` file.
 
-See https://github.com/daniel-robotics/ros_python_pkg for example ros package setup
-
-```bash
-# Run a ros noetic instance
-docker run -it --network=host osrf/ros:noetic-desktop
-
-```
+But for a quick-start, in individual terminals:
+1. Start the NATS server and client
+    - `docker compose -f nats-server/compose.yaml up`
+1. Echo all messages from the NATS server
+    - `docker exec -it nats-box nats sub ">"`
+1. Publish a message to the NATS server
+    - `docker exec -it nats-box nats pub --server=nats://localhost:4222 robomote.fire.location '{"lat
+":47.39831624913856,"lon":8.54685815056169}'`
+    - You should see the message appear on the NATS server echo terminal - NATS is working correctly
+1. Start the ROS1-NATS bridge
+    - `docker compose -f   NATS_bridge/compose.yaml up --build`
+    - You should see a `fieldai.node_heartbeat` message being published to NATS
+    - --- Everything should work up until this point ---
+1. Start streaming ROS1 data
+    - (Parts to develop) You should see location / battery / etc. messages appear on the NATS server echo terminal

@@ -44,6 +44,9 @@ class nats_bridge(object):
         # --- Internal Robot State ---
         self.current_heading = 0.0
         self.last_gps_msg = None
+        
+        # --- Heartbeat ---
+        self.last_heartbeat_time = time.time()
 
         # --- Subscribers ---
         rospy.Subscriber('/gps/fix', NavSatFix, self._gps_callback, queue_size=10)                 # GPS callback
@@ -190,6 +193,9 @@ class nats_bridge(object):
     async def _process_queue(self):
         while not rospy.is_shutdown() and not self._stopping:
             try:
+                # Publish heartbeat at 1 Hz
+                self._publish_heartbeat()
+                
                 try:
                     subject, data = self.publish_queue.get_nowait()
                 except queue.Empty:
@@ -209,3 +215,15 @@ class nats_bridge(object):
 
     def _get_iso_timestamp(self):
         return datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+
+    def _publish_heartbeat(self):
+        """Publish a 1 Hz heartbeat to indicate the node is alive."""
+        now = time.time()
+        if (now - self.last_heartbeat_time) >= 1.0:
+            self.last_heartbeat_time = now
+            payload = {
+                "device_id": self._device_id,
+                "ts": self._get_iso_timestamp(),
+                "status": "alive"
+            }
+            self._queue_publish(f'{self._device_id}.node_heartbeat', payload)

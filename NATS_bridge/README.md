@@ -1,5 +1,7 @@
 
-## Debugging
+# FieldAI NATS Bridge
+
+## NATS Bridge
 
 See https://github.com/daniel-robotics/ros_python_pkg for example ros package setup
 
