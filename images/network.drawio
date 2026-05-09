@@ -59,12 +59,25 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="NqXXLPDWZZw7BoWwIbQB-10" edge="1" parent="1" source="NqXXLPDWZZw7BoWwIbQB-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;startArrow=classic;startFill=1;dashed=1;dashPattern=8 8;" target="NqXXLPDWZZw7BoWwIbQB-2">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="510" />
+              <mxPoint x="475" y="510" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="1vgdmPXWtOp6ZMq3ka-s-3" edge="1" parent="1" source="Mt-QOnj-M8pVkXTkuhvp-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="NqXXLPDWZZw7BoWwIbQB-6">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="460" y="660" as="sourcePoint" />
             <mxPoint x="710" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qBYYMGFewZOWRPkuQaBo-2" edge="1" parent="1" source="qBYYMGFewZOWRPkuQaBo-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=classic;startFill=1;dashed=1;dashPattern=12 12;" target="NqXXLPDWZZw7BoWwIbQB-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="510" />
+              <mxPoint x="220" y="510" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="qBYYMGFewZOWRPkuQaBo-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" value="&lt;div&gt;&lt;b&gt;LiveKit Room&lt;/b&gt;&lt;/div&gt;&lt;div&gt;192.168.128.??&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: x-small;&quot;&gt;7880/ws, 7881/tcp, 7882/udp&lt;/span&gt;&lt;/div&gt;" vertex="1">
