@@ -67,7 +67,7 @@
             <mxPoint x="710" y="530" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="qBYYMGFewZOWRPkuQaBo-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" value="&lt;div&gt;&lt;b&gt;LiveKit Room&lt;/b&gt;&lt;/div&gt;&lt;div&gt;192.168.128.11:4222&lt;/div&gt;" vertex="1">
+        <mxCell id="qBYYMGFewZOWRPkuQaBo-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" value="&lt;div&gt;&lt;b&gt;LiveKit Room&lt;/b&gt;&lt;/div&gt;&lt;div&gt;192.168.128.11&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: x-small;&quot;&gt;7880/ws, 7881/tcp, 7882/udp&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="160" x="570" y="390" as="geometry" />
         </mxCell>
       </root>
