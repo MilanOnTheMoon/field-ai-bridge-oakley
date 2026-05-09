@@ -2,3 +2,5 @@
 *.drawio.bkp*
 
 *.venv
+
+.DS_Store
