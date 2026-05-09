@@ -1,0 +1,13 @@
+# livekit-server config for the dummy room.
+# Mirrors what `--dev` would have set; ports/keys live here so the
+# image is self-contained.
+port: 7880
+bind_addresses:
+  - 0.0.0.0
+keys:
+  devkey: secret
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+logging:
+  level: info

@@ -1,0 +1,20 @@
+[project]
+name = "ros1-livekit-bridge"
+version = "0.1.0"
+description = "ROS1 → LiveKit bridge — publishes a ROS image topic as a LiveKit video track."
+# livekit >= 0.5 requires Python >= 3.9. ros:noetic ships only 3.8, so
+# the Docker build provisions Python 3.10 via uv (see Dockerfile).
+requires-python = ">=3.9"
+# rospy / sensor_msgs come from `source /opt/ros/noetic/setup.bash` and
+# are NOT on PyPI. Only pip-installable deps go here.
+dependencies = [
+    "livekit~=1.1",
+    "livekit-api~=1.1",
+    "opencv-python",
+    "numpy",
+    # rospy's pure-Python runtime deps (normally apt-installed for system
+    # Python 3.8 only) — bundled in the venv too.
+    "pyyaml",
+    "rospkg",
+    "defusedxml",
+]

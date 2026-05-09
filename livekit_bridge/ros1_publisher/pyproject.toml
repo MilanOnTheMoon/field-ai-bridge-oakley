@@ -1,0 +1,18 @@
+[project]
+name = "ros1-publisher"
+version = "0.1.0"
+description = "ROS1 image-source node — webcam (or static JPEG) → sensor_msgs/CompressedImage."
+# rospy ships only on Python 3.8 from apt, but PyPI deps need 3.9+; the
+# Docker build provisions Python 3.10 via uv (see Dockerfile).
+requires-python = ">=3.9"
+# rospy / sensor_msgs come from `source /opt/ros/noetic/setup.bash` and
+# are NOT on PyPI. Only pip-installable deps go here.
+dependencies = [
+    "opencv-python",
+    "numpy",
+    # rospy's pure-Python runtime deps (normally apt-installed for system
+    # Python 3.8 only) — bundled in the venv too.
+    "pyyaml",
+    "rospkg",
+    "defusedxml",
+]

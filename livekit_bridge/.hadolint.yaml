@@ -1,0 +1,4 @@
+ignored:
+  - DL3007   # using :latest is OK for upstream-tracking dev images
+  - DL3008   # don't pin Debian apt versions
+  - DL3013   # don't pin pip versions

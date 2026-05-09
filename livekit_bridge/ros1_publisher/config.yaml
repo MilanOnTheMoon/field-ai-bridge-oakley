@@ -1,0 +1,26 @@
+# ROS1 image publisher — config.
+#
+# Both this process and the LiveKit bridge in ../ros1_livekit_bridge/
+# must point at the same `ros_master_uri` and use the same `topic`.
+
+# ROS master to register with. Typical setups:
+#   http://localhost:11311          — roscore on this host
+#   http://<robot-ip>:11311         — roscore on the robot, bridge on a laptop
+ros_master_uri: http://localhost:11311
+node_name: ros1_image_publisher
+
+# Topic to publish. Bridge config must match.
+topic: /webcam/image/compressed
+
+# Capture size and rate. Hints to the camera driver — actual values may
+# be clamped to whatever modes the device supports.
+width: 1920
+height: 1080
+fps: 30
+
+# Image source — pick exactly one:
+#   device: <int>          OpenCV camera index (0 = first webcam)
+#   image_path: <path>     Replay a static JPEG forever (headless / no webcam)
+# If `image_path` is set, `device` is ignored.
+device: 0
+image_path: polaris_image.jpg

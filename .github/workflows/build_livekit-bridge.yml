@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - livekit_room
+          - viewer_livekit
+          - streamer_livekit
+          - ros1_publisher
+          - ros1_livekit_bridge
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.image }}
+          push: false
+          load: false
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,scope=${{ matrix.image }},mode=max
+
+  hadolint:
+    name: hadolint (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - livekit_room
+          - viewer_livekit
+          - streamer_livekit
+          - ros1_publisher
+          - ros1_livekit_bridge
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.image }}/Dockerfile
+          config: .hadolint.yaml
+          failure-threshold: warning
+
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: check .
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: format --check .

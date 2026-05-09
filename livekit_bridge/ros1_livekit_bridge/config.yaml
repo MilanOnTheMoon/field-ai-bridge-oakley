@@ -1,0 +1,33 @@
+# ROS1 → LiveKit bridge — config.
+#
+# This process and the ROS publisher in ../ros1_publisher/ must point
+# at the same `ros_master_uri` and use the same `topic`.
+
+# ROS master to register with. Typical setups:
+#   http://localhost:11311          — roscore on this host
+#   http://<robot-ip>:11311         — roscore on the robot, bridge on a laptop
+ros_master_uri: http://localhost:11311
+node_name: ros1_livekit_bridge
+
+# Topic to subscribe to. Publisher config must match.
+topic: /webcam/image/compressed
+
+# ROS message type on `topic`:
+#   CompressedImage   sensor_msgs/CompressedImage (JPEG/PNG payload)
+#   Image             sensor_msgs/Image (raw rgb8/bgr8/mono8)
+message_type: CompressedImage
+
+# Output frame size for the WebRTC track. The decoder resizes inbound
+# frames to this exact size — LiveKit's VideoSource is created at this
+# resolution and won't accept anything else.
+width: 1920
+height: 1080
+
+# LiveKit destination. Defaults match livekit_room/ in --dev mode.
+livekit:
+  url: ws://localhost:7880
+  api_key: devkey
+  api_secret: secret
+  room: test-room
+  identity: ros1-bridge
+  track_name: camera

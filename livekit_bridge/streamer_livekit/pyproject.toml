@@ -1,0 +1,10 @@
+[project]
+name = "streamer-livekit"
+version = "0.1.0"
+description = "Lean LiveKit webcam streamer (publishes the local webcam to a LiveKit room)."
+requires-python = ">=3.10"
+dependencies = [
+    "livekit~=1.1",
+    "livekit-api~=1.1",
+    "opencv-python",
+]
