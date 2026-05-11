@@ -31,9 +31,11 @@ from a browser on the host; everything else is unchanged.
 
 import argparse
 import http.server
+import json
 import socketserver
 import threading
 import webbrowser
+from urllib.parse import parse_qs, urlparse
 
 from livekit import api
 
@@ -162,6 +164,23 @@ def make_token(api_key: str, api_secret: str, room: str, identity: str) -> str:
     )
 
 
+def make_publisher_token(api_key: str, api_secret: str, room: str, identity: str) -> str:
+    """Mint a publish-only JWT for a camera publisher such as the Android app."""
+    return (
+        api.AccessToken(api_key, api_secret)
+        .with_identity(identity)
+        .with_grants(
+            api.VideoGrants(
+                room_join=True,
+                room=room,
+                can_publish=True,
+                can_subscribe=False,
+            )
+        )
+        .to_jwt()
+    )
+
+
 def main() -> None:
     """Parse args, mint the token, render the page, serve it, open the browser."""
     parser = argparse.ArgumentParser(
@@ -215,9 +234,36 @@ def main() -> None:
     )
 
     class Handler(http.server.BaseHTTPRequestHandler):
-        """Serves the prebuilt HTML for any GET. No routing, no static files."""
+        """Serves the viewer page and a tiny dev token endpoint."""
 
         def do_GET(self):
+            parsed = urlparse(self.path)
+            if parsed.path == "/token":
+                query = parse_qs(parsed.query)
+                room = query.get("room", [args.room])[0]
+                identity = query.get("identity", ["android-oakley"])[0]
+                publisher_token = make_publisher_token(
+                    args.api_key,
+                    args.api_secret,
+                    room,
+                    identity,
+                )
+                body = json.dumps(
+                    {
+                        "url": args.url,
+                        "room": room,
+                        "identity": identity,
+                        "token": publisher_token,
+                    }
+                ).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(html)))

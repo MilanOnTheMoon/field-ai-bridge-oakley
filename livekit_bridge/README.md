@@ -21,6 +21,43 @@ The end-to-end test pipeline is: `ros1_publisher` → `roscore` → `ros1_liveki
 
 ## 1. Start the LiveKit room (`livekit_room/`)
 
+Quick path for LAN testing from a phone:
+```bash
+./run_livekit_room.sh
+```
+
+The script builds `ff-livekit-room`, publishes ports `7880/tcp`, `7881/tcp`, and
+`7882/udp`, auto-detects the host LAN IP, and prints the Android URL. Override
+the advertised IP when needed:
+```bash
+LIVEKIT_NODE_IP=<host-LAN-IP> ./run_livekit_room.sh
+```
+
+Stop and remove the room container:
+```bash
+./stop_livekit_room.sh
+```
+
+Start the browser viewer for the same room:
+```bash
+./run_livekit_viewer.sh
+```
+
+Override the viewer's room or port when needed:
+```bash
+LIVEKIT_ROOM=test-room LIVEKIT_VIEWER_PORT=8080 ./run_livekit_viewer.sh
+```
+
+Stop and remove the viewer container:
+```bash
+./stop_livekit_viewer.sh
+```
+
+Mint and copy an Android publisher token for the dev room:
+```bash
+./mint_android_token.sh
+```
+
 Build once:
 ```bash
 cd livekit_room
