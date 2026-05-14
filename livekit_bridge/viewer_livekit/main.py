@@ -117,24 +117,54 @@ HTML_TEMPLATE = """<!doctype html>
     }}
   }}
 
-  room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {{
-    if (!attached && track.kind === LivekitClient.Track.Kind.Video) {{
-      track.attach(videoEl);
-      // Tell the browser to minimize its WebRTC jitter buffer. Default
-      // pre-roll is ~150-200ms in Chrome; on a stable LAN we'd rather
-      // take the occasional jitter glitch than carry that latency.
-      if (track.receiver) {{ track.receiver.playoutDelayHint = 0; }}
-      attached = true;
-      setState('connected', 'streaming: ' + (track.sid || 'video'));
+  function attachVideoTrack(track) {{
+    if (!track || attached || track.kind !== LivekitClient.Track.Kind.Video) return;
+    track.attach(videoEl);
+    // Tell the browser to minimize its WebRTC jitter buffer. Default
+    // pre-roll is ~150-200ms in Chrome; on a stable LAN we'd rather
+    // take the occasional jitter glitch than carry that latency.
+    if (track.receiver) {{ track.receiver.playoutDelayHint = 0; }}
+    attached = true;
+    setState('connected', 'streaming: ' + (track.sid || 'video'));
+  }}
+
+  function subscribeAndAttachExistingVideo() {{
+    for (const participant of room.remoteParticipants.values()) {{
+      const publications = participant.videoTrackPublications || participant.trackPublications;
+      for (const publication of publications.values()) {{
+        if (publication.kind && publication.kind !== LivekitClient.Track.Kind.Video) continue;
+        if (publication.track) {{
+          attachVideoTrack(publication.track);
+        }} else if (typeof publication.setSubscribed === 'function') {{
+          publication.setSubscribed(true);
+        }}
+      }}
     }}
+  }}
+
+  room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {{
+    attachVideoTrack(track);
   }});
-  room.on(LivekitClient.RoomEvent.ParticipantConnected, renderParts);
-  room.on(LivekitClient.RoomEvent.ParticipantDisconnected, renderParts);
+  room.on(LivekitClient.RoomEvent.TrackPublished, (publication) => {{
+    if (typeof publication.setSubscribed === 'function') publication.setSubscribed(true);
+    subscribeAndAttachExistingVideo();
+  }});
+  room.on(LivekitClient.RoomEvent.ParticipantConnected, () => {{
+    renderParts();
+    subscribeAndAttachExistingVideo();
+  }});
+  room.on(LivekitClient.RoomEvent.ParticipantDisconnected, () => {{
+    renderParts();
+    attached = false;
+    videoEl.removeAttribute('src');
+    videoEl.load();
+  }});
   room.on(LivekitClient.RoomEvent.Disconnected, () => {{ setState('error', 'disconnected'); }});
   room.connect(LIVEKIT_URL, LIVEKIT_TOKEN)
     .then(() => {{
       if (!attached) setState('connected', 'connected, waiting for video…');
       renderParts();
+      subscribeAndAttachExistingVideo();
     }})
     .catch(e => {{ setState('error', 'error: ' + e.message); }});
 </script></body></html>
