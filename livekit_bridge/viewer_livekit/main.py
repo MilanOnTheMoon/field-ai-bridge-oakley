@@ -66,6 +66,7 @@ HTML_TEMPLATE = """<!doctype html>
   #parts-list li::before{{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:#aaa;margin-right:6px;vertical-align:middle}}
   #parts-list li.self{{opacity:1;font-weight:600}}
   #parts-list li.self::before{{background:#4caf50}}
+  #gps{{margin-top:6px;padding-top:6px;border-top:1px solid #fff2;color:#c7f9d4;font-size:11px;white-space:pre-line}}
   #dot{{display:inline-block;width:8px;height:8px;border-radius:50%;background:#888;margin-right:6px;vertical-align:middle;transition:background 120ms}}
   #dot.connecting{{background:#e6c14f}}
   #dot.connected{{background:#4caf50}}
@@ -73,7 +74,7 @@ HTML_TEMPLATE = """<!doctype html>
   video{{width:100vw;height:100vh;object-fit:contain;background:#000;display:block}}
 </style></head>
 <body>
-<div id="status"><div id="state"><span id="dot" class="connecting"></span><span id="state-label">connecting…</span></div><div id="parts-head"></div><ul id="parts-list"></ul></div>
+<div id="status"><div id="state"><span id="dot" class="connecting"></span><span id="state-label">connecting…</span></div><div id="parts-head"></div><ul id="parts-list"></ul><div id="gps">GPS: waiting…</div></div>
 <video id="v" autoplay playsinline muted></video>
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
 <script>
@@ -82,6 +83,7 @@ HTML_TEMPLATE = """<!doctype html>
   const stateLabelEl = document.getElementById('state-label');
   const partsHeadEl = document.getElementById('parts-head');
   const partsListEl = document.getElementById('parts-list');
+  const gpsEl = document.getElementById('gps');
   const videoEl = document.getElementById('v');
   let attached = false;
   const room = new LivekitClient.Room({{ adaptiveStream: true, dynacast: true }});
@@ -142,6 +144,23 @@ HTML_TEMPLATE = """<!doctype html>
     }}
   }}
 
+  function handleGpsData(payload, participant, topic) {{
+    if (topic && topic !== 'phone-gps') return;
+    try {{
+      const text = new TextDecoder().decode(payload);
+      const gps = JSON.parse(text);
+      if (gps.type && gps.type !== 'phone_gps') return;
+      const lat = Number(gps.lat).toFixed(6);
+      const lon = Number(gps.lon).toFixed(6);
+      const accuracy = Number(gps.accuracy_m).toFixed(1);
+      const ageSec = Math.max(0, (Date.now() - Number(gps.timestamp_ms || 0)) / 1000).toFixed(1);
+      const source = participant && participant.identity ? participant.identity : 'publisher';
+      gpsEl.textContent = `GPS: ${{lat}}, ${{lon}}\\n±${{accuracy}} m · ${{ageSec}}s ago · ${{source}}`;
+    }} catch (e) {{
+      console.warn('failed to parse gps data', e);
+    }}
+  }}
+
   room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {{
     attachVideoTrack(track);
   }});
@@ -159,6 +178,7 @@ HTML_TEMPLATE = """<!doctype html>
     videoEl.removeAttribute('src');
     videoEl.load();
   }});
+  room.on(LivekitClient.RoomEvent.DataReceived, handleGpsData);
   room.on(LivekitClient.RoomEvent.Disconnected, () => {{ setState('error', 'disconnected'); }});
   room.connect(LIVEKIT_URL, LIVEKIT_TOKEN)
     .then(() => {{
@@ -187,6 +207,7 @@ def make_token(api_key: str, api_secret: str, room: str, identity: str) -> str:
                 room_join=True,
                 room=room,
                 can_subscribe=True,
+                can_publish_data=False,
                 can_publish=False,
             )
         )
@@ -204,6 +225,7 @@ def make_publisher_token(api_key: str, api_secret: str, room: str, identity: str
                 room_join=True,
                 room=room,
                 can_publish=True,
+                can_publish_data=True,
                 can_subscribe=False,
             )
         )
